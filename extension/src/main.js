@@ -35,6 +35,7 @@ export function boot() {
       splitX: () => (split ? split.x : 0.5),
       candidateVideo: () => hoverVideo || biggestVideo(),
       onStateChange: running => controls?.setActive(running),
+      onPreparing: on => controls?.setPreparing(on),
       onStatus: () => { if (controls?.isPanelOpen()) controls.updateStatus(); },
       onVideoGone: () => { if (inFeed()) reattach(); },
       onUiTick: (now, rect) => uiTick(now, rect),
@@ -47,7 +48,7 @@ export function boot() {
     const video = player.video;
     if (!controls) return;
     if (cfg.hoverReveal && (video.controls || !SITE_CONTROLS_OK)) {
-      bar.layout(rect, now < controls.revealUntil);
+      bar.layout(rect, now < controls.revealUntil, now);
     } else {
       bar.hide();
     }
@@ -85,12 +86,18 @@ export function boot() {
   }
 
   async function openAdvancedSettings() {
+    // after the extension was updated or reloaded, the script already in a page has lost it: nothing it asks for can
+    // be answered until the page is loaded again, so say that instead of doing nothing
+    if (!chrome.runtime?.id) { controls?.setAdvancedLabel('Reload the page: Framegen was updated'); return; }
     try {
       const response = await chrome.runtime.sendMessage({ type: 'fcOpenOptions' });
       if (!response?.ok) throw new Error(response?.error || 'Could not open settings');
     } catch (messageError) {
       try { await chrome.runtime.openOptionsPage(); }
-      catch (directError) { log('open settings', directError || messageError); }
+      catch (directError) {
+        log('open settings', directError || messageError);
+        controls?.setAdvancedLabel(chrome.runtime?.id ? 'Open settings from the toolbar icon' : 'Reload the page: Framegen was updated');
+      }
     }
   }
 
@@ -103,7 +110,7 @@ export function boot() {
       const video = biggestVideo();
       if (!video) { notices.showCritical('Framegen: no video found'); return; }
       try { await player.start(video); }
-      catch (e) { notices.showCritical('Framegen error: ' + (e?.message || e)); if (!player.blocked) log(e); }
+      catch (e) { player.preparing(false); notices.showCritical('Framegen error: ' + (e?.message || e)); if (!player.blocked) log(e); }
     } finally { toggling = false; }
   }
 
@@ -166,7 +173,7 @@ export function boot() {
       if (!v || !v.videoWidth || toggling) { setTimeout(tick, 150); return; }
       toggling = true;
       try { await player.start(v); }
-      catch (e) { log('feed reattach', e); }
+      catch (e) { player.preparing(false); log('feed reattach', e); }
       finally { toggling = false; }
     };
     setTimeout(tick, 120);

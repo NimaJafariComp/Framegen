@@ -8,6 +8,17 @@ export const PICTURE_MODES = Object.freeze({
   detail: { label: 'Detail Boost', contrast: 0, saturation: 1, lift: 0, warmth: 0, detail: 1.2 },
 });
 
+// CSS approximations of the looks for the swatches in the UI; the picture itself is graded by the shader below.
+export const PICTURE_SWATCH_FILTERS = Object.freeze({
+  original: 'none',
+  cinema: 'saturate(.8) contrast(1.2) sepia(.22)',
+  'cinema-home': 'brightness(1.14) saturate(1.05) sepia(.14)',
+  noir: 'grayscale(1) brightness(1.1)',
+  vivid: 'saturate(1.5) contrast(1.18)',
+  sports: 'saturate(1.25) brightness(1.1) contrast(1.08)',
+  detail: 'contrast(1.12)',
+});
+
 export function pictureMode(value) {
   return Object.hasOwn(PICTURE_MODES, value) ? PICTURE_MODES[value] : PICTURE_MODES.original;
 }

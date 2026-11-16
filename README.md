@@ -9,6 +9,7 @@ neural network running on your GPU. No servers, no accounts, nothing leaves your
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/hpdpcjakhclhljfdkpjolonjlopbdhfk?label=chrome%20web%20store&color=19c37d)](https://chromewebstore.google.com/detail/framegen-frame-interpolat/hpdpcjakhclhljfdkpjolonjlopbdhfk)
 [![License](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
+[![Built on FlyHigh](https://img.shields.io/badge/built%20on-FlyHigh%20engine-7c5cff)](https://github.com/getflyhigh/flyhigh-engine)
 [![Ko-fi](https://img.shields.io/badge/support-ko--fi-ff5e5b)](https://ko-fi.com/monzikxd)
 
 <img src="docs/media/hero.gif" width="880" alt="15 fps source vs Framegen x4 interpolation, side by side">
@@ -47,8 +48,8 @@ a GPU with WebGPU support. GPUs without `shader-f16` run the engine's f32 kernel
 1. Open any video and hover over it: the **FG** button appears at the left edge of the player.
 2. Click it. The button turns green, the fps readout appears, and the video is now interpolated. Click again to turn
    it off.
-3. The settings button next to it opens the quick panel inside the player; **Advanced settings** there or in the
-   extension popup opens the full page with profiles.
+3. The two buttons under it open the panels inside the player: **Picture** (looks, sharpness, upscale, HDR) and
+   the quick settings. **Advanced settings** there or in the extension popup opens the full page with profiles.
 
 | Setting | What it does |
 |---|---|
@@ -56,6 +57,7 @@ a GPU with WebGPU support. GPUs without `shader-f16` run the engine's f32 kernel
 | **Quality** | The size the network runs at. `Balanced` is the model's native scale; higher costs more GPU time and rarely looks better |
 | **Anime mode** | Held-frame detection and the aggressive periodic-structure repair; keep on for anime |
 | **Anime cadence smoothing** | Experimental, off by default. Drawings on twos slide instead of stepping; every frame becomes a generated in-between, so big steps look softer; one source frame of lookahead |
+| **Picture mode** | A color and detail look on top of the video: Cinema, Cinema Home, Noir, Vivid, Sports, Detail Boost. `Original` changes nothing |
 | **Upscale** | 2x neural upscaling of every presented frame when the player is larger than the video |
 | **Static protection** | Pixels that did not change over the last frames (burnt-in subtitles, a logo) are taken from the source |
 | **Compare** | The split slider |
@@ -90,9 +92,16 @@ pwsh tools/build_extension.ps1 -EngineRepo <path>   # also refreshes extension/e
 ```
 
 `extension/` is directly loadable (Load unpacked). [docs/architecture.md](docs/architecture.md) explains how the host
-maps onto the engine; [AGENTS.md](AGENTS.md) lists the layout and the conventions. The previous engine stays in
+maps onto the engine. The previous engine stays in
 `web/rt` and on npm as [`framegen`](https://www.npmjs.com/package/framegen) ([packages/rt](packages/rt)); its notes are
 in [docs/TECHNICAL.md](docs/TECHNICAL.md). New integrations should use the engine directly.
+
+## Contributors
+
+- [@NimaJafariComp](https://github.com/NimaJafariComp): picture modes
+  ([#25](https://github.com/MONZikWasTaken/Framegen/pull/25), in 2.0.10).
+
+Pull requests are welcome against the `dev` branch; [docs/architecture.md](docs/architecture.md) explains how the code is laid out.
 
 ## Support the project
 

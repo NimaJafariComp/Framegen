@@ -187,8 +187,10 @@ export class Player {
       lookahead: !!this.spec?.video,
       gpuTimestamps: !!this.backend?.timestamps,
       playbackRate: this.playbackRate(),
-      // 10 ms at 848 x 480 until the first measurement; a fullscreen pool is 2 to 4 times that
-      midCostSeedMs: Math.min(40, Math.max(10, 10 * (w * h) / (848 * 480))),
+      // until the first measurement: with the fast render and linear t a generated frame is only the render (about
+      // 0.2 to 1 ms), the exact render about 1 ms at the 480 rung on a mid-range GPU. A seed far above the real cost
+      // kept fixed factors from generating at all, and held Auto at x2 wherever the measurement did not land
+      midCostSeedMs: this.backend?.sessionOptions(this.spec || { width: w, height: h, res: this.cfg.res }).linearT ? 1 : 3,
     };
   }
 
@@ -373,8 +375,10 @@ export class Player {
       while (ring.length > 1 && ring[1].at <= now) ring.shift();
       if (ring.length && ring[0].at <= now) compare = this.stream.inputTexture(ring[0].slot);
     }
-    this.presenter.present(tex, { compare, splitX: this.hooks.splitX(), width: this.overlay.width, height: this.overlay.height });
+    const drawn = this.presenter.present(tex, { compare, splitX: this.hooks.splitX(), width: this.overlay.width, height: this.overlay.height });
+    if (!drawn) return;
     if (source >= 0) this.lastShownSource = source;
+    if (!this.overlay.visible) this.preparing(false);
     this.overlay.reveal();
     this.stats.presents++;
     const win = this.stats.fpsWin;
@@ -411,6 +415,7 @@ export class Player {
     if (this.running && this.video === video) return;
     this.running = false;
     const epoch = this.cancelLoops();
+    this.preparing(true);
     this.video = video;
     this.watch(video);
     await this.ensureBackend();
@@ -431,7 +436,7 @@ export class Player {
     if (this.needsCanvas() && video.videoWidth && video.videoHeight && this.overlay.fitSupported) {
       if (this.kernelsReady) {
         const t0 = performance.now();
-        await this.kernelsReady;
+        await Promise.all([this.kernelsReady, this.presenter.ready]);
         if (epoch !== this.epoch || this.video !== video) return;
         if (this.cfg.debug) log('kernels ready', `${(performance.now() - t0).toFixed(0)} ms after the click`);
       }
@@ -465,7 +470,7 @@ export class Player {
     this.pacer.reset(performance.now());
     // the first seconds stall while the browser prepares pipelines: not a GPU limit
     this.pacer.modeChange(performance.now());
-    if (!this.needsCanvas()) this.overlay.passthrough();
+    if (!this.needsCanvas()) { this.overlay.passthrough(); this.preparing(false); }
     this.notices.setHud('', this.cfg.debug || this.cfg.showFps);
     if (this.sys.integrated) {
       this.notices.advise(`Chrome is running on the integrated GPU (${this.sys.gpu}). For full speed: `
@@ -484,8 +489,15 @@ export class Player {
     this.source.write(slot, video);
   }
 
+  preparing(on) {
+    if (this.isPreparing === on) return;
+    this.isPreparing = on;
+    this.hooks.onPreparing?.(on);
+  }
+
   stop() {
     const wasRunning = this.running;
+    this.preparing(false);
     // kernels compiled while running (the classifier, the cadence composite, a tuned conv variant) join the list
     this.backend?.rememberKernels();
     this.running = false;
@@ -534,7 +546,7 @@ export class Player {
       const [w, h] = this.poolDimsNow();
       this.ensureStream(w, h);
       const stream = this.stream;
-      const pts = Number.isFinite(metadata?.mediaTime) ? metadata.mediaTime * 1000 : now;
+      const pts = Number.isFinite(metadata?.mediaTime) ? metadata.mediaTime * 1000 : now * this.playbackRate();
       const presented = Number(metadata?.presentedFrames);
       let skipped = 0;
       if (Number.isFinite(presented)) {
@@ -564,6 +576,10 @@ export class Player {
         return;
       }
       this.source.write(slot, video);
+      // the first frame after a start goes up at once: the canvas appears with the picture the video shows and holds
+      // it for the presentation delay, after which the Pacer's frames follow it forwards. Appearing with the Pacer's
+      // first frame instead stepped the picture back by that delay, and a fade blended the two timelines
+      if (!this.overlay.visible) this.present(stream.inputTexture(slot), now, { source: slot });
       let kind = 'motion', motion;
       if (this.prev >= 0) {
         const c = await this.backend.nudge.wrap(stream.classify(this.prev, slot));
@@ -572,7 +588,9 @@ export class Player {
         motion = c.motion;
       }
       const t = performance.now();
-      const flush = this.pacer.sourceFrame(t, { id: slot, ptsMs: pts / this.playbackRate(), kind, motion, skipped });
+      // media time as it is: the Pacer has the playback rate. Dividing here as well made a 60 fps video at 1.5x read as
+      // 135 fps, and Auto stopped generating
+      const flush = this.pacer.sourceFrame(t, { id: slot, ptsMs: pts, kind, motion, skipped });
       this.generate(t, flush);
       const p = this.costs.push(stream, slot, pts);
       if (p.statsPending) await this.backend.nudge.wrap(stream.stats());
@@ -710,13 +728,20 @@ export class Player {
     if (changed.has('showWarnings') && !this.cfg.showWarnings) this.notices.hideWarnings();
     if (changed.has('showWatermark') && !this.cfg.showWatermark) this.notices.watermark.style.display = 'none';
     if (changed.has('subtitleOverlay')) this.layoutOverlay(null);
-    if (has(PRESENT_KEYS) && this.running && this.video?.paused && this.needsCanvas() && this.stream && this.source) {
-      const slot = this.stream.nextInput([]);
-      if (slot >= 0) {
-        this.source.write(slot, this.video);
-        this.present(this.stream.inputTexture(slot), performance.now(), { source: slot });
-      }
-    }
+    if (has(PRESENT_KEYS)) this.redrawPaused();
+  }
+
+  // A paused video delivers no frames, so a new look would not show until playback resumed.
+  redrawPaused() {
+    const epoch = this.epoch, presenter = this.presenter;
+    presenter?.ready?.then(() => {
+      if (!this.running || epoch !== this.epoch || presenter !== this.presenter) return;
+      if (!this.video?.paused || !this.needsCanvas() || !this.stream || !this.source) return;
+      const slot = this.stream.nextInput(this.inUse());
+      if (slot < 0) return;
+      this.source.write(slot, this.video);
+      this.present(this.stream.inputTexture(slot), performance.now(), { source: slot });
+    });
   }
 
   onFullscreenChange() {
