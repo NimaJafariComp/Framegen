@@ -12,7 +12,13 @@ neural network running on your GPU. No servers, no accounts, nothing leaves your
 [![Built on FlyHigh](https://img.shields.io/badge/built%20on-FlyHigh%20engine-7c5cff)](https://github.com/getflyhigh/flyhigh-engine)
 [![Ko-fi](https://img.shields.io/badge/support-ko--fi-ff5e5b)](https://ko-fi.com/monzikxd)
 
-<img src="docs/media/hero.gif" width="880" alt="15 fps source vs Framegen x4 interpolation, side by side">
+<a href="https://github.com/MONZikWasTaken/Framegen/releases/download/v1.0.0/framegen-live-demo.mp4">
+  <img src="docs/media/hero.gif" width="880" alt="15 fps source vs Framegen x4 interpolation, side by side">
+</a>
+
+**[Watch the original 50-second comparison video](https://github.com/MONZikWasTaken/Framegen/releases/download/v1.0.0/framegen-live-demo.mp4)**
+
+*Legacy Framegen demo showing the compare slider on YouTube. Footage: Sintel © Blender Foundation (CC BY).*
 
 </div>
 
@@ -69,19 +75,24 @@ see 24 to 60; on a 144 to 240 Hz screen, considerably more.
 
 ## Picture modes
 
-Compare all seven Picture Modes on the same photo, rendered by Framegen in SDR. Click any tile to see it at full size.
+Compare the pink petals, green background, and dark wing lines across seven modes. Every tile uses the same photo,
+rendered by Framegen in SDR. Click a tile for the full image.
 
-| Original | Cinema | Cinema Home | Noir |
-| :---: | :---: | :---: | :---: |
-| [![Original: blue sky, granite peaks, and the golden shore of Nelson Lake](docs/media/picture-modes/original.webp)](docs/media/picture-modes/original.webp) | [![Cinema: warmer granite and muted shoreline color](docs/media/picture-modes/cinema.webp)](docs/media/picture-modes/cinema.webp) | [![Cinema Home: brighter midtones and a warmer shoreline](docs/media/picture-modes/cinema-home.webp)](docs/media/picture-modes/cinema-home.webp) | [![Noir: black and white with visible detail in the forest shadows](docs/media/picture-modes/noir.webp)](docs/media/picture-modes/noir.webp) |
-| **Vivid** | **Sports** | **Detail Boost** | |
-| [![Vivid: deeper blue sky and a more saturated lakeshore](docs/media/picture-modes/vivid.webp)](docs/media/picture-modes/vivid.webp) | [![Sports: brighter colors and crisper tree edges](docs/media/picture-modes/sports.webp)](docs/media/picture-modes/sports.webp) | [![Detail Boost: sharper trees and granite with the original colors](docs/media/picture-modes/detail.webp)](docs/media/picture-modes/detail.webp) | |
+| Original | Cinema | Cinema Home |
+| :---: | :---: | :---: |
+| [![Original monarch butterfly on a pink zinnia](docs/media/picture-modes/original.webp)](docs/media/picture-modes/original.webp) | [![Cinema warms the wing and softens the flower colors](docs/media/picture-modes/cinema.webp)](docs/media/picture-modes/cinema.webp) | [![Cinema Home brightens the background and lifts wing shadows](docs/media/picture-modes/cinema-home.webp)](docs/media/picture-modes/cinema-home.webp) |
+| Unchanged reference | Warmer, more subdued color | Warmer and brighter midtones |
+| **Noir** | **Vivid** | **Sports** |
+| [![Noir butterfly and zinnia in black and white](docs/media/picture-modes/noir.webp)](docs/media/picture-modes/noir.webp) | [![Vivid brings out the orange wing and pink petals](docs/media/picture-modes/vivid.webp)](docs/media/picture-modes/vivid.webp) | [![Sports brightens colors and sharpens the wing and petals](docs/media/picture-modes/sports.webp)](docs/media/picture-modes/sports.webp) |
+| Black and white with lifted shadows | Stronger saturation and contrast | Brighter color and crisper edges |
+| **Detail Boost** | **Original close-up** | **Detail Boost close-up** |
+| [![Detail Boost sharpens the wing without changing the color grade](docs/media/picture-modes/detail.webp)](docs/media/picture-modes/detail.webp) | [![Original: magnified wing veins and scales](docs/media/picture-modes/original-closeup.webp)](docs/media/picture-modes/original-closeup.webp) | [![Detail Boost: the same wing crop with more defined veins and scales](docs/media/picture-modes/detail-closeup.webp)](docs/media/picture-modes/detail-closeup.webp) |
 
-Detail Boost shows sharpening at the photo's native size. Neural upscaling can also run on supported GPUs when the
-player is large enough.
+The last two tiles show the same wing crop at 2× magnification to make the sharpening visible. Neural upscaling
+is not shown here.
 
-Photo: [Nelson Lake, Yosemite National Park](https://commons.wikimedia.org/wiki/File:100905_Nelson_lake_Yosemite_National_Park.jpg)
-by Ted Wakabayashi, released into the public domain. The gallery images were graded and encoded as WebP.
+Photo: [Monarch butterfly on a zinnia](https://commons.wikimedia.org/wiki/File:Monarch_Butterfly_(20210717-FPAC-PJK-2022).jpg)
+by Preston Keres, USDA/FPAC (public domain). Cropped to a square and graded with Framegen.
 
 ## FAQ
 
