@@ -75,8 +75,9 @@ see 24 to 60; on a 144 to 240 Hz screen, considerably more.
 
 ## Picture modes
 
-Compare the pink petals, green background, and dark wing lines across seven modes. Every tile uses the same photo,
-rendered by Framegen in SDR. Click a tile for the full image.
+Compare the pink petals, green background, and dark wing lines across seven modes. The sample grades and sharpening
+are intentionally stronger where needed so the differences show at thumbnail size. Framegen's in-player presets
+are unchanged. Click any tile to see it full size.
 
 | Original | Cinema | Cinema Home |
 | :---: | :---: | :---: |
