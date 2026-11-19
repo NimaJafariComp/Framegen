@@ -69,25 +69,19 @@ see 24 to 60; on a 144 to 240 Hz screen, considerably more.
 
 ## Picture modes
 
-The same test still rendered by Framegen in SDR at the source size. Open any preview to see it at full size.
+Compare all seven Picture Modes on the same photo, rendered by Framegen in SDR. Click any tile to see it at full size.
 
-<p align="center">
-  <a href="docs/media/picture-modes/original.webp"><img src="docs/media/picture-modes/original.webp" width="560" alt="Original: a cyclist in a red jacket beside a coastal road"></a><br>
-  <strong>Original</strong> · No picture adjustments
-</p>
+| Original | Cinema | Cinema Home | Noir |
+| :---: | :---: | :---: | :---: |
+| [![Original: blue sky, granite peaks, and the golden shore of Nelson Lake](docs/media/picture-modes/original.webp)](docs/media/picture-modes/original.webp) | [![Cinema: warmer granite and muted shoreline color](docs/media/picture-modes/cinema.webp)](docs/media/picture-modes/cinema.webp) | [![Cinema Home: brighter midtones and a warmer shoreline](docs/media/picture-modes/cinema-home.webp)](docs/media/picture-modes/cinema-home.webp) | [![Noir: black and white with visible detail in the forest shadows](docs/media/picture-modes/noir.webp)](docs/media/picture-modes/noir.webp) |
+| **Vivid** | **Sports** | **Detail Boost** | |
+| [![Vivid: deeper blue sky and a more saturated lakeshore](docs/media/picture-modes/vivid.webp)](docs/media/picture-modes/vivid.webp) | [![Sports: brighter colors and crisper tree edges](docs/media/picture-modes/sports.webp)](docs/media/picture-modes/sports.webp) | [![Detail Boost: sharper trees and granite with the original colors](docs/media/picture-modes/detail.webp)](docs/media/picture-modes/detail.webp) | |
 
-| Cinema | Cinema Home | Noir |
-| :---: | :---: | :---: |
-| [![Cinema: warmer highlights and muted color](docs/media/picture-modes/cinema.webp)](docs/media/picture-modes/cinema.webp) | [![Cinema Home: warmer color and brighter midtones](docs/media/picture-modes/cinema-home.webp)](docs/media/picture-modes/cinema-home.webp) | [![Noir: black and white with visible shadow detail](docs/media/picture-modes/noir.webp)](docs/media/picture-modes/noir.webp) |
-| Warmer, muted color | Brighter, warmer midtones | Black and white with lifted shadows |
+Detail Boost shows sharpening at the photo's native size. Neural upscaling can also run on supported GPUs when the
+player is large enough.
 
-| Vivid | Sports | Detail Boost |
-| :---: | :---: | :---: |
-| [![Vivid: more saturated reds and blues](docs/media/picture-modes/vivid.webp)](docs/media/picture-modes/vivid.webp) | [![Sports: brighter colors and sharper edges](docs/media/picture-modes/sports.webp)](docs/media/picture-modes/sports.webp) | [![Detail Boost: sharper fabric and stone textures with original colors](docs/media/picture-modes/detail.webp)](docs/media/picture-modes/detail.webp) |
-| Stronger color and contrast | Brighter color and sharper edges | Sharper detail with unchanged color |
-
-Detail Boost shows sharpening here. It can also use neural upscaling on supported GPUs when the player is large
-enough.
+Photo: [Nelson Lake, Yosemite National Park](https://commons.wikimedia.org/wiki/File:100905_Nelson_lake_Yosemite_National_Park.jpg)
+by Ted Wakabayashi, released into the public domain. The gallery images were graded and encoded as WebP.
 
 ## FAQ
 
