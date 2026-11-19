@@ -57,7 +57,7 @@ a GPU with WebGPU support. GPUs without `shader-f16` run the engine's f32 kernel
 | **Quality** | The size the network runs at. `Balanced` is the model's native scale; higher costs more GPU time and rarely looks better |
 | **Anime mode** | Held-frame detection and the aggressive periodic-structure repair; keep on for anime |
 | **Anime cadence smoothing** | Experimental, off by default. Drawings on twos slide instead of stepping; every frame becomes a generated in-between, so big steps look softer; one source frame of lookahead |
-| **Picture mode** | A color and detail look on top of the video: Cinema, Cinema Home, Noir, Vivid, Sports, Detail Boost. `Original` changes nothing |
+| **[Picture mode](#picture-modes)** | A color and detail look on top of the video: Cinema, Cinema Home, Noir, Vivid, Sports, Detail Boost. `Original` changes nothing |
 | **Upscale** | 2x neural upscaling of every presented frame when the player is larger than the video |
 | **Static protection** | Pixels that did not change over the last frames (burnt-in subtitles, a logo) are taken from the source |
 | **Compare** | The split slider |
@@ -66,6 +66,28 @@ Profiles on the full settings page keep any number of setups; existing settings 
 
 **Good first test:** anything shot at 24 fps: a film scene with a slow pan, an anime opening. On a 60 Hz screen you
 see 24 to 60; on a 144 to 240 Hz screen, considerably more.
+
+## Picture modes
+
+The same test still rendered by Framegen in SDR at the source size. Open any preview to see it at full size.
+
+<p align="center">
+  <a href="docs/media/picture-modes/original.webp"><img src="docs/media/picture-modes/original.webp" width="560" alt="Original: a cyclist in a red jacket beside a coastal road"></a><br>
+  <strong>Original</strong> · No picture adjustments
+</p>
+
+| Cinema | Cinema Home | Noir |
+| :---: | :---: | :---: |
+| [![Cinema: warmer highlights and muted color](docs/media/picture-modes/cinema.webp)](docs/media/picture-modes/cinema.webp) | [![Cinema Home: warmer color and brighter midtones](docs/media/picture-modes/cinema-home.webp)](docs/media/picture-modes/cinema-home.webp) | [![Noir: black and white with visible shadow detail](docs/media/picture-modes/noir.webp)](docs/media/picture-modes/noir.webp) |
+| Warmer, muted color | Brighter, warmer midtones | Black and white with lifted shadows |
+
+| Vivid | Sports | Detail Boost |
+| :---: | :---: | :---: |
+| [![Vivid: more saturated reds and blues](docs/media/picture-modes/vivid.webp)](docs/media/picture-modes/vivid.webp) | [![Sports: brighter colors and sharper edges](docs/media/picture-modes/sports.webp)](docs/media/picture-modes/sports.webp) | [![Detail Boost: sharper fabric and stone textures with original colors](docs/media/picture-modes/detail.webp)](docs/media/picture-modes/detail.webp) |
+| Stronger color and contrast | Brighter color and sharper edges | Sharper detail with unchanged color |
+
+Detail Boost shows sharpening here. It can also use neural upscaling on supported GPUs when the player is large
+enough.
 
 ## FAQ
 
